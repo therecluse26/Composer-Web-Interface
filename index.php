@@ -12,15 +12,16 @@
         <div id="container" class="container">
         
             <h2 id="search_title" class="text-center">Search</h2>
-            <div class="">
-                <div class="input-group text-center">
                 <form id="search_form">
+
+                <div class="input-group">
                   <input id="search_string" type="text" class="form-control" placeholder="Search for...">
                   <span class="input-group-btn">
                     <submit class="btn btn-default" id="search_btn" type="button">Go!</submit>
                   </span>
-                    </form>
                 </div><!-- /input-group -->
+                                        </form>
+
               </div><!-- /.col-lg-6 -->
             <br>
             
@@ -29,36 +30,6 @@
             </div>
 
 
-        </div>
-        <script type="text/javascript">
-        
-            $(document).ready(function(){
-                
-                $("#search_form").submit(function(e){
-                    
-                    e.preventDefault();
-                    
-                    $.ajax({
-                        url: "lib/search_package.ajax.php",
-                        type: "GET",
-                        data: {
-                            q: $("#search_string").val(),
-                            per_page: 100
-                        },
-                        beforeSend: function () {
-                           $('#search_result').html("<p class='text-center'><img class='verloader' src='lib/loading.gif'></p>");
-                        },
-                        success: function(response){
-                            $("#search_result").html(response);  
-                            $("#search_title").html("Search for \"" + $("#search_string").val() + "\"");
-                        }
-                        
-                    })
-                    
-                })
-                
-            })
-            
-        </script>
+        <script src="lib/js/searchajax.js" type="text/javascript"></script>
     </body>
 </html>
