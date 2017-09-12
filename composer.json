@@ -1,0 +1,1 @@
+{"name":"therecluse26\/composer-web-interface","description":"Web interface for integrating Composer into your web platform for increased extensibility","type":"library","require":{"guzzlehttp\/guzzle":"~6.0","components\/jquery":"^3.2","components\/bootstrap":"^3.3"},"license":"MIT","authors":[{"name":"Brad Magyar","email":"braddmagyar@gmail.com"}]}
