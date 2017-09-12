@@ -1,28 +1,3 @@
-<?php
-require "lib/packagehandler.class.php";
-
-$pkg = new PackageHandler;
-
-$search = $_GET['q'];
-
-if (!$_GET['per_page']) {
-    $per_page = 20;
-} else {
-    $per_page = $_GET['per_page'];
-}
-
-$results = $pkg->search('query', $search, $per_page);
-
-$composer_json = json_decode(file_get_contents('composer.json'), true);
-
-echo file_get_contents('composer.json', true);
-
-echo "<br><br>";
-
-echo json_encode($composer_json);
-
-?>
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -36,37 +11,54 @@ echo json_encode($composer_json);
     <body>
         <div id="container" class="container">
         
-            <h1 class="text-center">Results for <?php echo '"'.ucfirst($search).'"'; ?></h1>
-
-            <?php
-                $i = 0;
-                        
-                foreach($results as $result) {
-                        
-                    //Displays if package is installed or not
-                    if(array_key_exists($result->name, $composer_json['require'])) {
-                        $installed = true;
-                        $color = "green";
-                        $button = "<button id='uninstall' class='btn btn-primary'>Uninstall</button>";
-                    } else {
-                        $installed = false;
-                        $color = "red";
-                        $button = "<button id='install' class='btn btn-primary'>Install</button>";
-                    }
-                    
-                        echo "<div class='well'>
-                        <h3 id='$i-name' style='color:$color;'>$result->name</h3>
-                        <div id='$i-description'>$result->description</div>
-                        <div id='$i-url'><a href='$result->url'>$result->url</a></div><br>
-                        <div id='$i-downloads'>Downloads: $result->downloads</div>
-                        <div id='$i-favers'>Favers: $result->favers</div><br>
-                        $button
-                        </div><br>";
-                        
-                        $i++;                    
-                }
+            <h2 id="search_title" class="text-center">Search</h2>
+            <div class="">
+                <div class="input-group text-center">
+                <form id="search_form">
+                  <input id="search_string" type="text" class="form-control" placeholder="Search for...">
+                  <span class="input-group-btn">
+                    <submit class="btn btn-default" id="search_btn" type="button">Go!</submit>
+                  </span>
+                    </form>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            <br>
             
-            ?>
+            <div id="search_result">
+            
+            </div>
+
+
         </div>
+        <script type="text/javascript">
+        
+            $(document).ready(function(){
+                
+                $("#search_form").submit(function(e){
+                    
+                    e.preventDefault();
+                    
+                    $.ajax({
+                        url: "lib/search_package.ajax.php",
+                        type: "GET",
+                        data: {
+                            q: $("#search_string").val(),
+                            per_page: 100
+                        },
+                        beforeSend: function () {
+                           $('#search_result').html("<p class='text-center'><img class='verloader' src='lib/loading.gif'></p>");
+                        },
+                        success: function(response){
+                            $("#search_result").html(response);  
+                            $("#search_title").html("Search for \"" + $("#search_string").val() + "\"");
+                        }
+                        
+                    })
+                    
+                })
+                
+            })
+            
+        </script>
     </body>
 </html>
