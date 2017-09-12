@@ -25,28 +25,35 @@ $composer_json = json_decode(file_get_contents('../composer.json'), true);
 
 $i = 0;
 
-foreach($results as $result) {
+if($results) {
+    
+    foreach($results as $result) {
 
-    //Displays if package is installed or not
-    if(array_key_exists($result->name, $composer_json['require'])) {
-        $installed = true;
-        $color = "green";
-        $button = "<button id='uninstall' class='btn btn-primary'>Uninstall</button>";
-    } else {
-        $installed = false;
-        $color = "red";
-        $button = "<button id='install' class='btn btn-primary'>Install</button>";
+        //Displays if package is installed or not
+        if(array_key_exists($result->name, $composer_json['require'])) {
+            $installed = true;
+            $color = "green";
+            $button = "<button id='uninstall-$i' class='btn btn-primary'>Uninstall</button>";
+        } else {
+            $installed = false;
+            $color = "red";
+            $button = "<button id='install-$i' class='btn btn-primary'>Install</button>";
+        }
+
+        echo "<div class='well'>
+        <h3 id='$i-name' style='color:$color;margin-top:-2px;'>$result->name</h3>
+        <div id='$i-description'>$result->description</div>
+        <div id='$i-url'><a href='$result->url'>$result->url</a></div><br>
+        <div id='$i-downloads'>Downloads: $result->downloads</div>
+        <div id='$i-favers'>Favers: $result->favers</div><br>
+        $button
+        </div><br>";
+
+        $i++;                    
     }
-
-    echo "<div class='well'>
-    <h3 id='$i-name' style='color:$color;'>$result->name</h3>
-    <div id='$i-description'>$result->description</div>
-    <div id='$i-url'><a href='$result->url'>$result->url</a></div><br>
-    <div id='$i-downloads'>Downloads: $result->downloads</div>
-    <div id='$i-favers'>Favers: $result->favers</div><br>
-    $button
-    </div><br>";
-
-    $i++;                    
+    
+} else {
+    
+    echo "<h4 class='text-center'>No packages found for \"$search\"</h4>";
+    
 }
-
