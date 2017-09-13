@@ -24,6 +24,11 @@ class PackageHandler
         ]);
     }
     
+    public function get_http_response_code($url) {
+        $headers = get_headers($url);
+        return substr($headers[0], 9, 3);
+    }
+    
     /**
     * Search for a Composer package
     **/
@@ -54,7 +59,43 @@ class PackageHandler
     **/
     public function show($package) {
         
+        try {
+            
+            $pkg_url = "https://raw.githubusercontent.com/$package/master/README.md";
+            
+            $response = $this->client->get($pkg_url);
         
+            if ($response->getStatusCode() == 200) {
+                    
+                $body = $response->getBody()->getContents();
+                $Parsedown = new Parsedown();
+                $markdown = $Parsedown->text($body); 
+                
+            } else {
+                
+                $pkg_url = strtolower("https://raw.githubusercontent.com/$package/master/README.md");
+                $response = $this->client->get($pkg_url);
+
+                if ($response->getStatusCode() == 200) {
+                           
+                    $body = $response->getBody()->getContents();
+                    $Parsedown = new Parsedown();
+                    $markdown = $Parsedown->text($body); 
+
+                } 
+            
+            } 
+            
+            return $response;
+
+            
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+
+        }
+
+
     }
     
     /**

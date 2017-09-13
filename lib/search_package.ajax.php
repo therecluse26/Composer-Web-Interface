@@ -11,17 +11,15 @@ if (!$_GET['per_page']) {
     $per_page = $_GET['per_page'];
 }
 
-if (!$_GET['$search_type']) {
+if (!$_GET['search_type']) {
     $search_type = "name";
 } else {
-    $search_type = $_GET['$search_type'];
+    $search_type = $_GET['search_type'];
 }
 
 $results = $pkg->search('query', $search, $per_page);
 
 $composer_json = json_decode(file_get_contents('../composer.json'), true);
-
-//Results for <?php echo '"'.ucfirst($search).'"';           
 
 $i = 0;
 
@@ -36,7 +34,7 @@ if($results) {
             $button = "<button id='uninstall-$i' class='btn btn-primary'>Uninstall</button>";
         } else {
             $installed = false;
-            $color = "red";
+            $color = "black";
             $button = "<button id='install-$i' class='btn btn-primary'>Install</button>";
         }
 
@@ -44,9 +42,11 @@ if($results) {
         <h3 id='$i-name' style='color:$color;margin-top:-2px;'>$result->name</h3>
         <div id='$i-description'>$result->description</div>
         <div id='$i-url'><a href='$result->url'>$result->url</a></div><br>
+        <div id='$i-repo'><a href='$result->repository'>$result->repository</a></div><br>
         <div id='$i-downloads'>Downloads: $result->downloads</div>
         <div id='$i-favers'>Favers: $result->favers</div><br>
-        $button
+        $button 
+        <button id='show-$i' class='btn btn-primary' onclick='showPackage(\"$i\", \"$result->name\");'>Show Details</button>
         </div><br>";
 
         $i++;                    
